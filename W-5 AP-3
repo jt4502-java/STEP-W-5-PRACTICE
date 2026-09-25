@@ -1,0 +1,22 @@
+#include <stdio.h>
+void findMinMaxSpread(int scores[], int n)
+{
+    int min = scores[0];
+    int max = scores[0];
+    for (int i = 1; i < n; i++)
+    {
+        if (scores[i] < min)
+            min = scores[i];
+        if (scores[i] > max)
+            max = scores[i];
+    }
+    printf("Min: %d | Max: %d | Spread: %d\n",
+           min, max, max - min);
+}
+int main()
+{
+    int scores[] = {45, 82, 79, 90, 33, 90, 61};
+    int n = 7;
+    findMinMaxSpread(scores, n);
+    return 0;
+}
