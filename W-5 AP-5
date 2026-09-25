@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct
+{
+    char name[50];
+    int matchesPlayed;
+    double battingAverage;
+    int injured;
+} Player;
+
+/* Experience-only rule */
+int isDraftableByMatches(int matchesPlayed)
+{
+    return matchesPlayed >= 10;
+}
+
+/* Matches + fitness rule */
+int isDraftableByFitness(int matchesPlayed, int injured)
+{
+    return matchesPlayed >= 5 && !injured;
+}
+
+/* Compare players by batting average in descending order */
+int comparePlayers(const void *a, const void *b)
+{
+    Player *p1 = (Player *)a;
+    Player *p2 = (Player *)b;
+
+    if (p1->battingAverage < p2->battingAverage)
+        return 1;
+
+    if (p1->battingAverage > p2->battingAverage)
+        return -1;
+
+    return 0;
+}
+
+void draftAndRank(Player players[], int n)
+{
+    Player draftable[500];
+    int count = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (isDraftableByMatches(players[i].matchesPlayed) ||
+            isDraftableByFitness(players[i].matchesPlayed,
+                                  players[i].injured))
+        {
+            draftable[count] = players[i];
+            count++;
+        }
+    }
+
+    qsort(draftable, count, sizeof(Player), comparePlayers);
+
+    for (int i = 0; i < count; i++)
+    {
+        printf("%d. %s", i + 1, draftable[i].name);
+
+        if (i < count - 1)
+            printf(" | ");
+    }
+
+    printf("\n");
+}
+
+int main()
+{
+    Player players[] = {
+        {"Virat", 15, 48.0, 0},
+        {"Rahul", 7, 55.0, 0},
+        {"Sameer", 3, 60.0, 0},
+        {"Dev", 12, 20.0, 1}
+    };
+
+    int n = 4;
+
+    draftAndRank(players, n);
+
+    return 0;
+}
