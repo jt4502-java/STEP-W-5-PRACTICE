@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <string.h>
+
+const char* findDuplicatePick(char playerNames[][50], int n)
+{
+    static char result[100];
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (strcmp(playerNames[i], playerNames[j]) == 0)
+            {
+                sprintf(result, "Duplicate Found: %s", playerNames[i]);
+                return result;
+            }
+        }
+    }
+    return "No Duplicates Found";
+}
+int main()
+{
+    char playerNames[][50] = {
+        "Kohli",
+        "Bumrah",
+        "Kohli",
+        "Rohit"
+    };
+    int n = 4;
+    printf("%s\n", findDuplicatePick(playerNames, n));
+    return 0;
+}
