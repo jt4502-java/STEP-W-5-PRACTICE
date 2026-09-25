@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <limits.h>
+
+void findTopThreeScores(int scores[], int n)
+{
+    int first = INT_MIN;
+    int second = INT_MIN;
+    int third = INT_MIN;
+    for (int i = 0; i < n; i++)
+    {
+        if (scores[i] >= first)
+        {
+            third = second;
+            second = first;
+            first = scores[i];
+        }
+        else if (scores[i] >= second)
+        {
+            third = second;
+            second = scores[i];
+        }
+        else if (scores[i] > third)
+        {
+            third = scores[i];
+        }
+    }
+    printf("[%d, %d, %d]\n", first, second, third);
+}
+
+int main()
+{
+    int scores[] = {45, 82, 79, 90, 33, 90, 61};
+    int n = 7;
+
+    findTopThreeScores(scores, n);
+
+    return 0;
+}
