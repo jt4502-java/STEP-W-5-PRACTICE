@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct
+{
+    char name[50];
+    double cgpa;
+    int codingScore;
+    double compositeScore;
+} Candidate;
+
+
+/* CGPA-only eligibility */
+int isEligibleCGPA(double cgpa)
+{
+    return cgpa >= 7.0;
+}
+
+
+/* CGPA + coding score eligibility */
+int isEligibleCombined(double cgpa, int codingScore)
+{
+    return cgpa >= 6.5 && codingScore >= 60;
+}
+
+
+/* Calculate composite score */
+double calculateCompositeScore(Candidate *c)
+{
+    return (c->cgpa * 10) + (c->codingScore * 0.5);
+}
+
+
+/* Comparison function for qsort */
+int compareCandidates(const void *a, const void *b)
+{
+    Candidate *c1 = (Candidate *)a;
+    Candidate *c2 = (Candidate *)b;
+
+    if (c1->compositeScore < c2->compositeScore)
+        return 1;
+
+    if (c1->compositeScore > c2->compositeScore)
+        return -1;
+
+    return 0;
+}
+
+
+/* Shortlist and rank candidates */
+void shortlistAndRank(Candidate candidates[], int n)
+{
+    Candidate shortlisted[500];
+    int count = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (isEligibleCGPA(candidates[i].cgpa) ||
+            isEligibleCombined(candidates[i].cgpa,
+                                candidates[i].codingScore))
+        {
+            candidates[i].compositeScore =
+                calculateCompositeScore(&candidates[i]);
+
+            shortlisted[count] = candidates[i];
+            count++;
+        }
+    }
+    /* Sort in descending order */
+    qsort(shortlisted,
+          count,
+          sizeof(Candidate),
+          compareCandidates);
+
+    /* Print ranking */
+    for (int i = 0; i < count; i++)
+    {
+        printf("%d. %s (%.1f)\n",
+               i + 1,
+               shortlisted[i].name,
+               shortlisted[i].compositeScore);
+    }
+}
+int main()
+{
+    Candidate candidates[] =
+    {
+        {"Aisha", 8.2, 40, 0},
+        {"Rohit", 6.8, 65, 0},
+        {"Meena", 6.0, 90, 0},
+        {"Karan", 7.5, 20, 0}
+    };
+    int n = 4;
+    shortlistAndRank(candidates, n);
+    return 0;
+}
