@@ -1,0 +1,50 @@
+#include <stdio.h>
+
+double rowAverage(int row[], int n)
+{
+    int sum = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        sum += row[i];
+    }
+
+    return (double)sum / n;
+}
+
+void classifyMatches(int runsPerOver[][10], int rowSizes[],
+                     int matches, int threshold)
+{
+    for (int i = 0; i < matches; i++)
+    {
+        double average = rowAverage(runsPerOver[i], rowSizes[i]);
+
+        if (average >= threshold)
+            printf("Match %d: Power Surge", i);
+        else
+            printf("Match %d: Normal", i);
+
+        if (i < matches - 1)
+            printf(" | ");
+    }
+
+    printf("\n");
+}
+
+int main()
+{
+    int runsPerOver[3][10] = {
+        {4, 6, 8},
+        {10, 12, 14},
+        {2, 3, 1}
+    };
+
+    int rowSizes[] = {3, 3, 3};
+
+    int matches = 3;
+    int threshold = 8;
+
+    classifyMatches(runsPerOver, rowSizes, matches, threshold);
+
+    return 0;
+}
